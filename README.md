@@ -6,7 +6,7 @@ This framework enforces the developer to think of states as a discrete collectio
 
 Class members with the state-specific subclasses are used to implement state-specific behavior. Prototype inheritance makes sure that the correct implementation is picked depending on the current state. 
 
-Read my article about State Subclassing if you'd like the rationale behind it.
+Read [my article about State Subclassing](https://medium.com/@bvanmeurs1985/state-subclassing-2c12d118d1cb) if you'd like the rationale behind it.
 
 ## What does the framework do?
 
