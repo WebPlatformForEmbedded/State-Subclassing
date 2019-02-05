@@ -12,9 +12,13 @@ Read my article about State Subclassing if you'd like the rationale behind it.
 
 While changing the state, we want our instances to change their prototype at runtime! But changing the prototype of an instance at runtime (using Object.setPrototypeOf) is a bad idea from a performance perspective. 
 
-As an alternative and **performant** solution this framework auto-generates a **StateMachineRouter** that resides in the prototype chain between the instance and the main class. It is created for a specific class by using `StateMachine.create(classType)`. This custom router class is generated specifically for the source class and the `_states()` provided by it. The router is responsible for **mimicking** dynamic prototype changing based on the selected state. The router is then instantiated instead of the original main class, to create instances that have state-specific behavior.
+As an alternative and **performant** solution this framework auto-generates a **StateMachineRouter** that resides in the prototype chain between the instance and the main class. It is created for a specific class by using `StateMachine.create(classType)`. This custom router class is generated specifically for the source class and the `_states()` provided by it. The router is responsible for *mimicking* dynamic prototype changing based on the selected state. The router is then instantiated instead of the original main class, to create instances that have state-specific behavior.
+
+By changing the state of an instance (see API below), one can change the behavior of certain class members (usually methods, but also getters/setters are supported).
 
 ## API
+
+The following methods become available on your main class:
 
 |method|description|
 |------|-----------|
@@ -24,9 +28,13 @@ As an alternative and **performant** solution this framework auto-generates a **
 |`_inState(statePath : string)`|Returns true if the current state is in the specified (super)state|
 |`_getMostSpecificHandledMember(memberNames : string[]) : string`|If you have multiple members, it returns the member that is specified in the deepest state. It can be used to obtain the most specific member before executing it|
 
-## Quick example
+For every state, it is possible to specify special *lifecycle methods*:
+|method|description|
+|`$enter`|invoked when the current state entered this state class|
+|`$exit`|invoked when the current state exited this state class|
 
-It can be added onto **any** existing class quite easily:
+## Example
+
 ```javascript
 class Account {
     constructor() {
