@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+</head>
+<body>
+<script type="module">
+    function doStuff(account) {
+        // Calls Open.deposit
+        account.deposit(50);
+
+        // Calls Open.withdraw
+        account.withdraw(20);
+
+        // Switches to Open.Held state
+        account.placeHold();
+
+        // Calls Open.Held.withdraw
+        account.withdraw(20);
+
+        // Switches to Open state.
+        account.open();
+
+        // Shows 30
+        console.log(account.getAvailable());
+    }
+
+    import Account from "./Account.js";
+    const account = new Account();
+    doStuff(account);
+
+    import StealingAccount from "./StealingAccount.js";
+    const stealingAccount = new StealingAccount();
+    doStuff(stealingAccount);
+
+    console.log('stolen: ' + stealingAccount.getStolenAmount());
+
+</script>
+</body>
+</html>
