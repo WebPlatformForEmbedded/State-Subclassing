@@ -10,7 +10,7 @@ Read my article about State Subclassing if you'd like the rationale behind it.
 
 ## What does the framework do?
 
-While changing the state, we want our instances to change their prototype at runtime! But changing the prototype of an instance at runtime (using Object.setPrototypeOf) is a bad idea from a performance perspective. 
+While changing the state, we want our instances to change their prototype at runtime! But changing the prototype of an instance at runtime (using `Object.setPrototypeOf()`) is a bad idea from a performance perspective. 
 
 As an alternative and **performant** solution this framework auto-generates a **StateMachineRouter** that resides in the prototype chain between the instance and the main class. It is created for a specific class by using `StateMachine.create(classType)`. This custom router class is generated specifically for the source class and the `_states()` provided by it. The router is responsible for *mimicking* dynamic prototype changing based on the selected state. The router is then instantiated instead of the original main class, to create instances that have state-specific behavior.
 
