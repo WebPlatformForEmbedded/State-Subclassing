@@ -29,6 +29,7 @@ The following methods become available on your main class:
 |`_getMostSpecificHandledMember(memberNames : string[]) : string`|If you have multiple members, it returns the member that is specified in the deepest state. It can be used to obtain the most specific member before executing it|
 
 For every state, it is possible to specify special *lifecycle methods*:
+
 |method|description|
 |------|-----------|
 |`$enter`|invoked when the current state entered this state class|
