@@ -2,7 +2,7 @@
 
 This repository contains a framework for a new Object Oriented approach to state-based programming: **State Subclassing**.
 
-This framework enforces the developer to think of states as a discrete collection of hierarchical states, which maps to a class hierarchy. Conveniently, this gives us the whole prototype-based toolbox: we can use return values, the super keyword, this.constructor, local methods, static methods and getters/setters!
+This framework allows the developer to think of states as a discrete collection of hierarchical states, which maps to a class hierarchy. Conveniently, this gives us the whole prototype-based toolbox: we can use return values, the super keyword, this.constructor, local methods, static methods and getters/setters!
 
 Class members with the state-specific subclasses are used to implement state-specific behavior. Prototype inheritance makes sure that the correct implementation is picked depending on the current state. 
 
