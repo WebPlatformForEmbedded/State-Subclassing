@@ -1,5 +1,15 @@
 export default class StateMachine {
 
+    constructor() {
+        StateMachine.setupStateMachine(this);
+    }
+
+    static setupStateMachine(target) {
+        const router = StateMachine.create(target.constructor);
+        Object.setPrototypeOf(target, router.prototype);
+        target._initStateMachine();
+    }
+
     /**
      * Creates a state machine implementation.
      * It extends the original type and should be used when creating new instances.
@@ -9,18 +19,13 @@ export default class StateMachine {
      * @returns {StateMachine}
      */
     static create(type) {
-        if (type.hasOwnProperty('_sm')) {
-            throw new Error("StateMachine.create has already been run for class '" + type.name + "'");
+        if (!type.hasOwnProperty('_sm')) {
+            // Only need to run once.
+            const stateMachineType = new StateMachineType(type);
+            type._sm = stateMachineType;
         }
 
-        if (type.prototype._initStateMachine) {
-            const name = type.prototype._routedType.name;
-            throw new Error(`Please extend original ${name} instead of router (use 'StateMachine.create(class extends ${name}.original {..})')`);
-        }
-
-        const stateMachineType = new StateMachineType(type);
-        type._sm = stateMachineType;
-        return stateMachineType.router;
+        return type._sm.router;
     }
 
     /**
