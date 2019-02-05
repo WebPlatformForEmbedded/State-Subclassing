@@ -99,4 +99,11 @@ class Account {
         ];
     }
 }
+
+
+// Extend by state machine router.
+import StateMachine from "../src/StateMachine.js";
+Account = StateMachine.create(Account);
+
+export default Account;
 ```
