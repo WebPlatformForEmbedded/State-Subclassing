@@ -30,6 +30,7 @@ The following methods become available on your main class:
 
 For every state, it is possible to specify special *lifecycle methods*:
 |method|description|
+|------|-----------|
 |`$enter`|invoked when the current state entered this state class|
 |`$exit`|invoked when the current state exited this state class|
 
