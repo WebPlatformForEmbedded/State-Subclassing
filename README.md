@@ -2,21 +2,23 @@
 
 This repository contains a framework for a new Object Oriented approach to state-based programming: **State Subclassing**.
 
-This framework enforces the developer to think of states as a discrete collection of hierarchical states, which maps to a class hierarchy. Conveniently, this gives us the whole prototype-based toolbox: we can use return values, the super keyword, this.constructor, local methods, static methods and getters/setters!
+This framework allows the developer to think of states as a discrete collection of hierarchical states, which maps to a class hierarchy. Conveniently, this gives us the whole prototype-based toolbox: we can use return values, the super keyword, this.constructor, local methods, static methods and getters/setters!
 
 Class members with the state-specific subclasses are used to implement state-specific behavior. Prototype inheritance makes sure that the correct implementation is picked depending on the current state. 
 
-Read my article about State Subclassing if you'd like the rationale behind it.
+Read [my article about State Subclassing](https://medium.com/@bvanmeurs1985/state-subclassing-2c12d118d1cb) if you'd like the rationale behind it.
 
 ## What does the framework do?
 
-While changing the state, we want our instances to change their prototype at runtime! But changing the prototype of an instance at runtime (using Object.setPrototypeOf) is a bad idea from a performance perspective. 
+While changing the state, we want our instances to change their prototype at runtime! But changing the prototype of an instance at runtime (using `Object.setPrototypeOf()`) is a bad idea from a performance perspective. 
 
-That's why this framework auto-generates a **StateMachineRouter** that resides in the prototype chain between the instance and the main class. It is created for a specific class by using `StateMachine.create(classType)`.
+As an alternative and **performant** solution this framework auto-generates a **StateMachineRouter** that resides in the prototype chain between the instance and the main class. It is created for a specific class by using `StateMachine.create(classType)`. This custom router class is generated specifically for the source class and the `_states()` provided by it. The router is responsible for *mimicking* dynamic prototype changing based on the selected state. The router is then instantiated instead of the original main class, to create instances that have state-specific behavior.
 
-`StateMachine.create()` extends the specified class with a single, dynamically generated StateMachineRouter and returns it. This custom router class is generated specifically for the source class and the `_states()` provided by it. The router is responsible for **mimicking** dynamic prototype changing based on the selected state. The router is then instantiated instead of the original main class, to create instances that have state-specific behavior.
+By changing the state of an instance (see API below), one can change the behavior of certain class members (usually methods, but also getters/setters are supported).
 
 ## API
+
+The following methods become available on your main class:
 
 |method|description|
 |------|-----------|
@@ -26,9 +28,15 @@ That's why this framework auto-generates a **StateMachineRouter** that resides i
 |`_inState(statePath : string)`|Returns true if the current state is in the specified (super)state|
 |`_getMostSpecificHandledMember(memberNames : string[]) : string`|If you have multiple members, it returns the member that is specified in the deepest state. It can be used to obtain the most specific member before executing it|
 
-## Quick example
+For every state, it is possible to specify special *lifecycle methods*:
 
-It can be added onto **any** existing class quite easily:
+|method|description|
+|------|-----------|
+|`$enter`|invoked when the current state entered this state class|
+|`$exit`|invoked when the current state exited this state class|
+
+## Example
+
 ```javascript
 class Account {
     constructor() {
