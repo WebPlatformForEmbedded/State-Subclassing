@@ -29,6 +29,17 @@ export default class StateMachine {
     }
 
     /**
+     * Calls the specified method if it exists.
+     * @param {string} event
+     * @param {*...} args
+     */
+    fire(event, ...args) {
+        if (this._hasMethod(event)) {
+            this[event](...args);
+        }
+    }
+
+    /**
      * Returns the current state path (for example "Initialized.Loading").
      * @returns {string}
      * @protected
@@ -50,6 +61,27 @@ export default class StateMachine {
         const level = state.__level;
         const stateAtLevel = StateMachine._getStateAtLevel(currentState, level);
         return (stateAtLevel === state);
+    }
+
+    /**
+     * Returns true if the specified class member is defined for the currently set state.
+     * @param {string} name
+     * @returns {boolean}
+     * @private
+     */
+    _hasMember(name) {
+        return !!this.constructor.prototype[name];
+    }
+
+    /**
+     * Returns true if the specified class member is a method for the currently set state.
+     * @param {string} name
+     * @returns {boolean}
+     * @private
+     */
+    _hasMethod(name) {
+        const member = this.constructor.prototype[name];
+        return !!member && (typeof member === "function")
     }
 
     /**
@@ -124,6 +156,14 @@ export default class StateMachine {
                 }
             }
 
+            if (this._onStateChange) {
+                const context = {
+                    newState: newState.__path,
+                    prevState: this._state.__path
+                };
+                this._onStateChange(context);
+            }
+
         }
     }
 
@@ -159,6 +199,7 @@ export default class StateMachine {
         this.__setState(this._sm.getStateByPath(""));
         const context = {newState: "", prevState: undefined, sharedState: undefined};
         this._callEnter(this._state, [], context);
+        this._onStateChange = undefined;
     }
 
     /**
@@ -173,9 +214,15 @@ export default class StateMachine {
         do {
             for (let i = 0, n = memberNames.length; i < n; i++) {
                 const memberName = memberNames[i];
-                const alias = StateMachineType.getStateMemberAlias(cur.__path, memberName);
-                if (this[alias]) {
-                    return memberName;
+                if (!cur.__parent) {
+                    if (cur.prototype[memberName]) {
+                        return memberName;
+                    }
+                } else {
+                    const alias = StateMachineType.getStateMemberAlias(cur.__path, memberName);
+                    if (this[alias]) {
+                        return memberName;
+                    }
                 }
             }
             cur = cur.__parent;
@@ -601,12 +648,14 @@ class StateMachineType {
         stateMap[path] = state;
 
         const states = state._states;
-        const isInheritedFromParent = (parentState && parentState._states === states);
-        if (!isInheritedFromParent) {
-            const subStates = state._states();
-            subStates.forEach(subState => {
-                this._addState(subState, state, subState.name, stateMap);
-            });
+        if (states) {
+            const isInheritedFromParent = (parentState && parentState._states === states);
+            if (!isInheritedFromParent) {
+                const subStates = state._states();
+                subStates.forEach(subState => {
+                    this._addState(subState, state, subState.name, stateMap);
+                });
+            }
         }
     }
 

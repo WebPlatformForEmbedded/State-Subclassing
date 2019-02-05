@@ -1,6 +1,9 @@
+import StateMachine from "../src/StateMachine.js";
+
 class Account {
 
     constructor() {
+        StateMachine.setupStateMachine(this);
         this._balance = 0;
     }
 
@@ -67,9 +70,5 @@ class Account {
         ];
     }
 }
-
-// Extend by state machine router.
-import StateMachine from "../src/StateMachine.js";
-Account = StateMachine.create(Account);
 
 export default Account;

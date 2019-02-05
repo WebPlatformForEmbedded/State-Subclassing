@@ -12,7 +12,7 @@ Read [my article about State Subclassing](https://medium.com/@bvanmeurs1985/stat
 
 While changing the state, we want our instances to change their prototype at runtime! But changing the prototype of an instance at runtime (using `Object.setPrototypeOf()`) is a bad idea from a performance perspective. 
 
-As an alternative and **performant** solution this framework auto-generates a **StateMachineRouter** that resides in the prototype chain between the instance and the main class. It is created for a specific class by using `StateMachine.create(classType)`. This custom router class is generated specifically for the source class and the `_states()` provided by it. The router is responsible for *mimicking* dynamic prototype changing based on the selected state. The router is then instantiated instead of the original main class, to create instances that have state-specific behavior.
+As an alternative and **performant** solution this framework auto-generates a **StateMachineRouter** and places that in the prototype chain between the instance and the main class. This custom router class is generated specifically for the source class and the `_states()` provided by it. The router is responsible for *mimicking* dynamic prototype changing based on the selected state. The router is then instantiated instead of the original main class, to create instances that have state-specific behavior.
 
 By changing the state of an instance (see API below), one can change the behavior of certain class members (usually methods, but also getters/setters are supported).
 
@@ -26,7 +26,10 @@ The following methods become available on your main class:
 |`_setState(statePath : string)`|Changes the current state to the specified state path. The state path is a string of dot-separated names such as Open.Held|
 |`_getState() : string`|Returns the currently set state path|
 |`_inState(statePath : string)`|Returns true if the current state is in the specified (super)state|
+|`_hasMember(name : string : boolean|Returns true if the specified class member is defined for the currently set state|
+|`_hasMethod(name : string : boolean|Returns true if the specified class method is defined for the currently set state|
 |`_getMostSpecificHandledMember(memberNames : string[]) : string`|If you have multiple members, it returns the member that is specified in the deepest state. It can be used to obtain the most specific member before executing it|
+|`fire(name, ...args)`|Calls the specified method if it exists.|
 
 For every state, it is possible to specify special *lifecycle methods*:
 
@@ -38,7 +41,7 @@ For every state, it is possible to specify special *lifecycle methods*:
 ## Example
 
 ```javascript
-class Account {
+class Account extends StateMachine {
     constructor() {
         this._balance = 0;
     }
@@ -107,11 +110,4 @@ class Account {
         ];
     }
 }
-
-
-// Extend by state machine router.
-import StateMachine from "../src/StateMachine.js";
-Account = StateMachine.create(Account);
-
-export default Account;
 ```

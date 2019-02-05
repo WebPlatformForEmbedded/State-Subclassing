@@ -1,6 +1,6 @@
 import Account from "./Account.js";
 
-class StealingAccount extends Account.original {
+export default class StealingAccount extends Account {
 
     constructor() {
         super();
@@ -34,9 +34,3 @@ class StealingAccount extends Account.original {
         return states;
     }
 }
-
-// Extend by state machine router.
-import StateMachine from "../src/StateMachine.js";
-StealingAccount = StateMachine.create(StealingAccount);
-
-export default StealingAccount;
