@@ -38,6 +38,31 @@ For every state, it is possible to specify special *lifecycle methods*:
 |`$enter`|invoked when the current state entered this state class|
 |`$exit`|invoked when the current state exited this state class|
 
+## Usage
+You can add state-specific behavior to your classes by extending the StateMachine class:
+```javascript
+class MyClass extends StateMachine {
+}
+```
+
+It is also possible to mixin the state machine functionality as follows:
+```javascript
+class MyClass {
+    constructor() {
+        StateMachine.setupStateMachine(this);
+    }
+}
+```
+
+Please notice that performance-wise, it is extremely important that the setupStateMachine method is called immediately after instance creation, before accessing properties or other methods. The setupStateMachine method needs to change the prototype once, so any methods that had already been invoked at that point would get deoptimized.
+
+There is another method of using the StateMachine, in which you replace the original class reference by the StateMachineRouter. It doesn't have the danger of deopting any functions as the 
+```javascript
+class MyClass {
+}
+MyClass = StateMachine.create(MyClass);
+```
+
 ## Example
 
 ```javascript
