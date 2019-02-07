@@ -35,7 +35,7 @@ export default class StateMachine {
      */
     fire(event, ...args) {
         if (this._hasMethod(event)) {
-            this[event](...args);
+            return this[event](...args);
         }
     }
 
