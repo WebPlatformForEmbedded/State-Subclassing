@@ -27,7 +27,7 @@ The following methods become available on your main class:
 |`_getState() : string`|Returns the currently set state path|
 |`_inState(statePath : string)`|Returns true if the current state is in the specified (super)state|
 |`_hasMember(name : string : boolean`|Returns true if the specified class member is defined for the currently set state|
-|`_hasMethod(name : string : boolean|`Returns true if the specified class method is defined for the currently set state|
+|`_hasMethod(name : string : boolean`|Returns true if the specified class method is defined for the currently set state|
 |`_getMostSpecificHandledMember(memberNames : string[]) : string`|If you have multiple members, it returns the member that is specified in the deepest state. It can be used to obtain the most specific member before executing it|
 |`fire(name, ...args)`|Calls the specified method if it exists.|
 
