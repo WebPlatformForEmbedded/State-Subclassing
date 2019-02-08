@@ -1,8 +1,8 @@
 # State Subclassing Framework
 
-This repository contains a framework for a new Object Oriented approach to state-based programming: **State Subclassing**.
+This repository contains a framework for a new Object Oriented approach to State Oriented programming: **State Subclassing**.
 
-This framework allows the developer to think of states as a discrete collection of hierarchical states, which maps to a class hierarchy. Conveniently, this gives us the whole prototype-based toolbox: we can use return values, the super keyword, this.constructor, local methods, static methods and getters/setters!
+This framework allows the developer to think of states as a discrete collection of hierarchical classes. Conveniently, this offers the whole prototype-based toolbox: we can use return values, the super keyword, this.constructor, local methods, static methods and getters/setters!
 
 Class members with the state-specific subclasses are used to implement state-specific behavior. Prototype inheritance makes sure that the correct implementation is picked depending on the current state. 
 
@@ -26,8 +26,8 @@ The following methods become available on your main class:
 |`_setState(statePath : string)`|Changes the current state to the specified state path. The state path is a string of dot-separated names such as Open.Held|
 |`_getState() : string`|Returns the currently set state path|
 |`_inState(statePath : string)`|Returns true if the current state is in the specified (super)state|
-|`_hasMember(name : string : boolean|Returns true if the specified class member is defined for the currently set state|
-|`_hasMethod(name : string : boolean|Returns true if the specified class method is defined for the currently set state|
+|`_hasMember(name : string : boolean`|Returns true if the specified class member is defined for the currently set state|
+|`_hasMethod(name : string : boolean|`Returns true if the specified class method is defined for the currently set state|
 |`_getMostSpecificHandledMember(memberNames : string[]) : string`|If you have multiple members, it returns the member that is specified in the deepest state. It can be used to obtain the most specific member before executing it|
 |`fire(name, ...args)`|Calls the specified method if it exists.|
 
@@ -56,7 +56,7 @@ class MyClass {
 
 Please notice that performance-wise, it is extremely important that the setupStateMachine method is called immediately after instance creation, before accessing properties or other methods. The setupStateMachine method needs to change the prototype once, so any methods that had already been invoked at that point would get deoptimized.
 
-There is another method of using the StateMachine, in which you replace the original class reference by the StateMachineRouter. It doesn't have the danger of deopting any functions as the 
+There is another method of using the StateMachine, in which you replace the original class reference by the StateMachineRouter. Use this if you are unable to call setupStateMachine immediately after instance creation.
 ```javascript
 class MyClass {
 }
