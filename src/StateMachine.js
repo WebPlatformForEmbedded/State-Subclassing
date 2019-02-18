@@ -604,7 +604,7 @@ class StateMachineType {
     }
 
     static _isStateLocalMember(memberName) {
-        return memberName.startsWith("$");
+        return (memberName === "$enter") || (memberName === "$exit");
     }
 
     getStateByPath(statePath) {
